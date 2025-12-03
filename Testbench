@@ -1,0 +1,38 @@
+`timescale 1ns/1ps
+
+module ALU_4bit_tb;
+
+    // Testbench variables
+    reg  [3:0] A, B;
+    reg  [2:0] Sel;
+    wire [3:0] Y;
+    wire Carry;
+
+    // DUT instantiation
+    ALU_4bit uut (
+        .A(A),
+        .B(B),
+        .Sel(Sel),
+        .Y(Y),
+        .Carry(Carry)
+    );
+
+    initial begin
+        // Waveform dump
+        $dumpfile("alu4bit.vcd");
+        $dumpvars(0, ALU_4bit_tb);
+
+        // Test vectors
+        A = 4'b0101; B = 4'b0011; Sel = 3'b000; #10;   // ADD
+        A = 4'b1100; B = 4'b0101; Sel = 3'b001; #10;   // SUB
+        A = 4'b1010; B = 4'b1100; Sel = 3'b010; #10;   // AND
+        A = 4'b1010; B = 4'b1100; Sel = 3'b011; #10;   // OR
+        A = 4'b1010; B = 4'b1100; Sel = 3'b100; #10;   // XOR
+        A = 4'b0111; Sel = 3'b101; #10;                 // NOT
+        A = 4'b1111; Sel = 3'b110; #10;                 // INC
+        A = 4'b0000; Sel = 3'b111; #10;                 // DEC
+
+        $finish;
+    end
+
+endmodule
