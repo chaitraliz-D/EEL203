@@ -1,23 +1,19 @@
-module ALU_4bit(
-    input  [3:0] A, B,
-    input  [2:0] Sel,      
-    output reg [3:0] Y,
-    output reg Carry
+module ALU_4bit (
+    input [3:0] A,     
+    input [3:0] B,        
+    input [2:0] OP,        
+    output reg [3:0] Result 
 );
 
-always @(*) begin
-    Carry = 0;            // default
-    case (Sel)
-        3'b000: {Carry, Y} = A + B;   // Addition
-        3'b001: {Carry, Y} = A - B;   // Subtraction
-        3'b010: Y = A & B;            // AND
-        3'b011: Y = A | B;            // OR
-        3'b100: Y = A ^ B;            // XOR
-        3'b101: Y = ~A;               // NOT A
-        3'b110: Y = A + 1;            // Increment
-        3'b111: Y = A - 1;            // Decrement
-        default: Y = 4'b0000;
-    endcase
-end
-
+    always @(*) begin 
+        case (OP)
+            3'b000: Result = A + B; 
+            3'b001: Result = A - B; 
+            3'b010: Result = A & B;
+            3'b011: Result = A | B; 
+            3'b100: Result = A ^ B; 
+            3'b101: Result = ~A;    
+            default: Result = 4'b0000; 
+        endcase
+    end
 endmodule
