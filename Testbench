@@ -1,38 +1,67 @@
-`timescale 1ns/1ps
+module tb_ALU_4bit();
+    reg [3:0] A;
+    reg [3:0] B;
+    reg [2:0] OP;
 
-module ALU_4bit_tb;
+    wire [3:0] Result;
 
-    // Testbench variables
-    reg  [3:0] A, B;
-    reg  [2:0] Sel;
-    wire [3:0] Y;
-    wire Carry;
-
-    // DUT instantiation
-    ALU_4bit uut (
+    ALU_4bit DUT (
         .A(A),
         .B(B),
-        .Sel(Sel),
-        .Y(Y),
-        .Carry(Carry)
+        .OP(OP),
+        .Result(Result)
     );
 
+    // Initial block for stimulating inputs
     initial begin
-        // Waveform dump
-        $dumpfile("alu4bit.vcd");
-        $dumpvars(0, ALU_4bit_tb);
+        // Test Case 1: Addition (OP = 3'b000)
+        A = 4'd5;
+        B = 4'd3;
+        OP = 3'b000;
+        #10; 
 
-        // Test vectors
-        A = 4'b0101; B = 4'b0011; Sel = 3'b000; #10;   // ADD
-        A = 4'b1100; B = 4'b0101; Sel = 3'b001; #10;   // SUB
-        A = 4'b1010; B = 4'b1100; Sel = 3'b010; #10;   // AND
-        A = 4'b1010; B = 4'b1100; Sel = 3'b011; #10;   // OR
-        A = 4'b1010; B = 4'b1100; Sel = 3'b100; #10;   // XOR
-        A = 4'b0111; Sel = 3'b101; #10;                 // NOT
-        A = 4'b1111; Sel = 3'b110; #10;                 // INC
-        A = 4'b0000; Sel = 3'b111; #10;                 // DEC
+        // Test Case 2: Subtraction (OP = 3'b001)
+        A = 4'd10;
+        B = 4'd4;
+        OP = 3'b001;
+        #10;
 
+        // Test Case 3: Bitwise AND (OP = 3'b010)
+        A = 4'b1100;
+        B = 4'b1010;
+        OP = 3'b010;
+        #10;
+
+        // Test Case 4: Bitwise OR (OP = 3'b011)
+        A = 4'b1100;
+        B = 4'b1010;
+        OP = 3'b011;
+        #10;
+
+        // Test Case 5: Bitwise XOR (OP = 3'b100)
+        A = 4'b1100;
+        B = 4'b1010;
+        OP = 3'b100;
+        #10;
+
+        // Test Case 6: Bitwise NOT (OP = 3'b101)
+        A = 4'b1100;
+        B = 4'd0; // B input is not used for this operation
+        OP = 3'b101;
+        #10;
+
+        // Test Case 7: Default (OP not in the list)
+        A = 4'd1;
+        B = 4'd1;
+        OP = 3'b111;
+        #10;
+
+        // Finish simulation
         $finish;
+    end
+
+    initial begin
+        $monitor("Time=%0t | A=%d, B=%d, OP=%b | Result=%d", $time, A, B, OP, Result);
     end
 
 endmodule
